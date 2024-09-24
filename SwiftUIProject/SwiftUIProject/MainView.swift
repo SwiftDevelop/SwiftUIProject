@@ -8,18 +8,22 @@
 import SwiftUI
 
 struct MainView: View {
+    @State private var isPresented: Bool = false
+    @State private var selectedProject: ProjectInfo?
+    
     var body: some View {
         NavigationStack {
             List {
                 ForEach(projects) { project in
                     Button(action: {
-                        
+                        selectedProject = project
+                        isPresented.toggle()
                     }, label: {
                         HStack {
                             VStack(alignment: .leading) {
-                                Text(project.name)
+                                Text(project.name.rawValue)
                                     .foregroundStyle(.primary)
-                                Text("based on \(project.base)")
+                                Text("based on \(project.name.based)")
                                     .foregroundStyle(.secondary)
                                     .font(.caption)
                             }
@@ -33,6 +37,9 @@ struct MainView: View {
             }
             .listStyle(PlainListStyle())
             .navigationTitle("Projects")
+            .sheet(isPresented: $isPresented) {
+                selectedProject?.view
+            }
         }
     }
 }
